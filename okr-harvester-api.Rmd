@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+# Load packages
+library(tidyverse)
+library(httr)
+library(jsonlite)
+```
+
+
+# source the config file with the Slack API token and channel ID
+```{r}
+source(".config")
+```
+
+##
+```{r}
+url_slack <- 'https://slack.com/api/groups.history'
+
+url <- str_c(url_slack, "?", "token=", token, "&", "channel=", channel, "&pretty=1")
+url
+```
+
+
+
+```{r}
+a <- GET(url)
+a
+```
+
+```{r}
+msgs <- content(a)$messages
+#msgs
+```
+
+
+```{r}
+nest2df <- function(x){
+  tribble(
+    ~user, ~text, ~timestamp, ~reaction
+    x$user,  x$text, x$ts, x$reaction
+  )
+}
+
+nest2df(msgs[[1]])
+```
+
+```{r}
+library(purrr)
+map_df(msgs, nest2df)
+
+```
+
