@@ -2,8 +2,6 @@
 
 # Load packages
 library(tidyverse)
-library(httr)
-library(jsonlite)
 library(purrr)
 
 # load the config file that contains the API token
